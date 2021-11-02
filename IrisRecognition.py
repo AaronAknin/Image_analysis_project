@@ -1,69 +1,18 @@
-import cv2
-import numpy as np
-import glob
-import math
-import scipy
-from scipy.spatial import distance
-from scipy import signal
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
-import matplotlib.pyplot as plt
-import pandas as pd
-from sklearn import metrics
-from IrisLocalization import IrisLocalization
-from IrisNormalization import IrisNormalization
-from ImageEnhancement import ImageEnhancement
-from FeatureExtraction import FeatureExtraction
-from IrisMatching import IrisMatching
-from PerformanceEvaluation import PerformanceEvaluation
-import warnings
-warnings.filterwarnings("ignore")
+import os
 
-def function(folder_path):
-    '''TRAINING'''
+#for loop read in data 
+dir = ("/Users/wuyin/Grad/21Fall/5293-001_ImageAnalysis/GroupProj")
+x_train, X_test = [], []
+for file in dir:
+    img_train = os.path.join(dir, file, '1/.img')
+    img_test = os.path.join(dir, file, '2/.img')
+    img_localized_train = irisLocalization.centroid(img_train)
+    img_normalized_train = irisNormalization.daugman_normalizaiton(img_localized_train)
+    X_train.append(imgeEnhancement(img_normalized_train))
+    img_localized_test = irisLocalization.centroid(img_test)
+    img_normalized_test = irisNormalization.daugman_normalizaiton(img_localized_test)
+    X_test.append(imgeEnhancement(img_normalized_test))
+#training set includes the first session, and testing set includes the second session
 
-    #reading the training images from the CASIA dataset
-    feature_vector_train = []
-    class_train = []
-    for i in range(1,109):
-        for j in range(1,4):
-            path = folder_path+"/"+'{:03}'.format(i)+'/1/'+'{:03}'.format(i)+'_1_'+str(j)+'.bmp'
-            print(path)
-            a = IrisLocalization(path)
-            b = IrisNormalization(a[0], 64, 512, a[1], a[2])
-            c = ImageEnhancement(b)
-            d = FeatureExtraction(c)
-            feature_vector_train.append(d)
-            class_train.append(i)
-    print("Training data processed.")
-
-
-    '''TESTING'''
-
-    feature_vector_test = []
-    class_test = []
-    for i in range(1,109):
-        for j in range(1,5):
-            path = folder_path+"/"+'{:03}'.format(i)+'/2/'+'{:03}'.format(i)+'_2_'+str(j)+'.bmp'
-            print(path)
-            a = IrisLocalization(path)
-            b = IrisNormalization(a[0], 64, 512, a[1], a[2])
-            c = ImageEnhancement(b)
-            d = FeatureExtraction(c)
-            feature_vector_test.append(d)
-            class_test.append(i)
-    print("Testing data processed.")
-
-    components = [15,30,60,90,120,160,200]
-    L = []
-    for component in components:
-        predict = IrisMatching(feature_vector_train,feature_vector_test,component)
-        performance = PerformanceEvaluation(predict,class_test)
-        L.append([component,performance])
-
-    plt.plot(components,[L[i][1][0] for i in range(len(L))])
-    plt.show()
-
-if __name__ == "__main__":
-    folder_path = "CASIA Iris Image Database (version 1.0)"
-    function(folder_path)
+#go through localization, normalization, enhancement and featureExtraction
 
