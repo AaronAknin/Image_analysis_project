@@ -1,3 +1,4 @@
+#Use Fisher linear discriminant for dimension reduction and nearest center classifier for classification
 import cv2
 import numpy as np
 import glob
@@ -9,10 +10,12 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn import metrics
 
+#use LDA to reduce the dimension of training dataset
 def dim_reduction(list_train, list_test, components):
-    
+    #list:X, class:y
     #get the classes of all training feature vectors
     class_train = []
+    #class_train contains the label of each image in the training session
     for i in range(1,109):
         for j in range(0,3):
             class_train.append(i)
@@ -31,6 +34,7 @@ def dim_reduction(list_train, list_test, components):
     #return transformed training and testing data, and the testing classes and predicted values for ROC
     return reduced_train , reduced_test, class_train
 
+#calculate L1 distance, L2 distance and cosine similarity
 def euclidean_distance(row1, row2):
     distance = 0.0
     for i in range(len(row1)):
@@ -52,10 +56,11 @@ def L2_distance(row1, row2):
 def Cosine_distance(row1,row2):
     return 1 - np.dot(row1,row2)/(euclidean_distance(row1,[0]*len(row1))*euclidean_distance(row2,[0]*len(row2)))
 
-
+#calculate the distance between testing data and training data
 def IrisMatching(list_train, list_test, components):
     reduced_train , reduced_test , class_train = dim_reduction(list_train, list_test, components)
     predict = []
+    #save the class with minimum distance into prediction
     for img_test in reduced_test:
         L1 = []
         L2 = []
