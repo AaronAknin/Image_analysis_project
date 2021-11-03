@@ -59,8 +59,24 @@ def Cosine_distance(row1,row2):
 #calculate the distance between testing data and training data
 def IrisMatching(list_train, list_test, components):
     reduced_train , reduced_test , class_train = dim_reduction(list_train, list_test, components)
-    predict = []
+    predict_orig = []
+    predict_reduced = []
+
     #save the class with minimum distance into prediction
+    #get the prediction by using the original features
+    for img_test in list_test:
+        L1 = []
+        L2 = []
+        Cosine = []
+        for img_train in list_train:
+            L1.append(L1_distance(img_test,img_train))
+            L2.append(L1_distance(img_test,img_train))
+            Cosine.append(L1_distance(img_test,img_train))
+        mL1 = class_train[L1.index(min(L1))]
+        mL2 = class_train[L2.index(min(L2))]
+        mCosine = class_train[Cosine.index(min(Cosine))]
+        predict_orig.append([mL1,mL2,mCosine])
+    #get the prediction by using the reduced features
     for img_test in reduced_test:
         L1 = []
         L2 = []
@@ -72,5 +88,6 @@ def IrisMatching(list_train, list_test, components):
         mL1 = class_train[L1.index(min(L1))]
         mL2 = class_train[L2.index(min(L2))]
         mCosine = class_train[Cosine.index(min(Cosine))]
-        predict.append([mL1,mL2,mCosine])
-    return predict
+        predict_reduced.append([mL1,mL2,mCosine])
+        
+    return predict_orig, predict_reduced
