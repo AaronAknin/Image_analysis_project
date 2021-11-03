@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt 
+from sklearn.neighbors import NearestCentroid
+from sklearn.metrics import roc_curve, auc
 
 #calculating the CRR for the identification mode (CRR for all three measures, i.e., 
 #L1, L2, and Cosine similarity, should be >=75% , the higher the better)
@@ -46,7 +48,7 @@ def draw_Table3(predict_orig, predict_reduced, class_test):
        
     plt.show() 
     
-    def plot_Fig10(predict_reduced, class_test):
+def plot_Fig10(predict_reduced, class_test):
     #Varaition of the recognition rate with changes of dimensionality of the reduced feature rate
     #dim<=107
     dim = range(1, 108)
@@ -61,3 +63,35 @@ def draw_Table3(predict_orig, predict_reduced, class_test):
     plt.ylabel("Correct recognition rate")
     plt.xlabel("Dimensionality of the feature vector")
     plt.show()
+    
+def plot_ROCCurve(X_test, y_test):
+    model = NearestCentroid()
+    y_score = model.fit(X_test, y_test).score(X_test, y_test)
+    
+    #calculate ROC curve
+    fpr = {}
+    tpr = {}
+    roc_auc = {}
+    for i in range(108):
+        fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_score[:, i])
+        roc_auc[i] = auc(fpr[i], tpr[i])
+    
+    #plotting
+    plt.figure()
+    lw = 2
+    plt.plot(
+        fpr[2],
+        tpr[2],
+        color="blue",
+        lw=lw,
+        label="ROC curve (area = %0.2f)" % roc_auc[2],
+    )
+    plt.plot([0, 1], [0, 1], color="black", lw=lw, linestyle="--")
+    plt.xlim([0.0, 1.0])
+    plt.ylim([0.0, 1.05])
+    plt.xlabel("False Positive Rate")
+    plt.ylabel("True Positive Rate")
+    plt.title("Receiver operating characteristic curve")
+    plt.legend(loc="lower right")
+    plt.show()
+    
