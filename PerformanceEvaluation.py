@@ -45,3 +45,19 @@ def draw_Table3(predict_orig, predict_reduced, class_test):
                  fontweight ="bold") 
        
     plt.show() 
+    
+    def plot_Fig10(predict_reduced, class_test):
+    #Varaition of the recognition rate with changes of dimensionality of the reduced feature rate
+    #dim<=107
+    dim = range(1, 108)
+    crr_reduced_cosine = []
+    
+    #calculate the crr of reduced feature vector using cosine similarity with different dimension(components in IrisMatching)
+    for i in range(dim):
+        crr = PerformanceEvaluation(predict_reduced, class_test)
+        crr_reduced_cosine.append(crr[2])
+    
+    plt.plot(crr_reduced_cosine, dim)
+    plt.ylabel("Correct recognition rate")
+    plt.xlabel("Dimensionality of the feature vector")
+    plt.show()
