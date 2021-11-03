@@ -1,3 +1,11 @@
+##1.   The whole logic of our design
+
+---
+In the main function, we first read in the CASIA Iris Image Dataset. We saved the first session, where there are 3 images of each class, as our training data; and we saved the second session with 4 images of each class as our testing data. We also saved the labels along with the input data. 
+
+We did data preprocessing by applying localization, normalization, enhancement and feature extraction on the data. Then, we used IrisMatching to get the prediction of the training data. We use PerformanceEvaluation to get the (CRR)correct recognition rate of 3 distance measurement methods and 7 different dimension. At the end, we draw the table of recognition results by using different distance measurement methods, and found that ... By plotting the CRR of using feature vectors of different dimension, we found that... We used 10 threshhold numbers for matching and got different false match rate and false nonmatch rate. Among these 10 threshhold numbers, all threshholds below 0.42 gives the 0 false match rate and xx gives the smallest false nonmatch rate. By plotting the ROC curve, we found that xx gives the best result.
+---
+
 *   *Iris Location:*
 
 > We define the IrisLocalization function, we get the location of two circles. Here we define centroid function to get the coordinates of the iris center centroid_x and centroid_y. Then we reshape the size of image to square according to the location of the center. We define the circles function to show the circles of pupil and iris.
